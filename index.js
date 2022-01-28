@@ -6,7 +6,8 @@ const { MongoClient } = require('mongodb');
 const ObjectId = require('mongodb').ObjectId;
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+app.use(cors())
+app.use(express.json())
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.i4mso.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -31,6 +32,13 @@ async function run() {
             const blog = await blogCollection.findOne(query);
             res.send(blog);
         })
+
+        // blog
+        app.post("/blogs", async (req, res) => {
+            const user = req.body
+            const result = await blogCollection.insertOne(user);
+            res.send(result);
+        });
 
     }
     finally {
